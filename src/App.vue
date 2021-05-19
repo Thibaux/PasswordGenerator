@@ -31,5 +31,7 @@ export default class App extends Vue {}
   display: flex;
   align-content: center;
   justify-content: center;
+  width: 100vw;
+  height: 100vh;
 }
 </style>
