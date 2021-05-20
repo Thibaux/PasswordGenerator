@@ -66,17 +66,64 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Generator extends Vue {
   private passwordLenght: number = 25;
-  private password: string;
+  // private password: string;
 
-  private generateLowerCase() {}
+  private secureMathRandom() {
+    return (
+      window.crypto.getRandomValues(new Uint32Array(1))[0] /
+      (Math.pow(2, 32) - 1)
+    );
+  }
 
-  private shuffleCharacters() {
-    let lowercase = this.generateLowerCase();
-    console.log(lowercase);
+  private generateLowerCase() {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+  }
+
+  private generateUpperCase() {
+    return String.fromCharCode(Math.floor(this.secureMathRandom() * 10) + 48);
+  }
+
+  private generateSymbol() {
+    const symbols = '~!@#$%^&*()_+{}":?><;.,';
+    return symbols[Math.floor(Math.random() * symbols.length)];
+  }
+
+  private generateNumber() {
+    return String.fromCharCode(Math.floor(this.secureMathRandom() * 10) + 48);
+  }
+
+  private shuffleCharacters($password: string) {
+    let result: string;
+    let password = $password;
+    password.split("");
+    let passwordChars = [...password];
+    let n = passwordChars.length;
+
+    for (var i = n - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = passwordChars[i];
+      passwordChars[i] = passwordChars[j];
+      passwordChars[j] = tmp;
+    }
+    result = passwordChars.join("");
+    return result;
   }
 
   private generatePassword() {
-    this.shuffleCharacters();
+    let lowercase: string = "";
+    let lower: string = "";
+    for (let index = 0; index < 10; index++) {
+      lower = this.generateLowerCase();
+      lowercase += lower;
+    }
+
+    console.log(lowercase);
+
+    console.log();
+    let p: string;
+    p = this.shuffleCharacters(lowercase);
+    console.log(lowercase);
+    console.log(p);
   }
 }
 </script>
