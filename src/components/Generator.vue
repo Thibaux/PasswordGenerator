@@ -2,7 +2,9 @@
   <main>
     <header>
       <h2>Generator 3000</h2>
-      <div class="passwordResult">{{ password }}</div>
+      <div class="passwordResult">
+        {{ password }}sldkfj;sdlkjf;slkdjf;lskdjf
+      </div>
     </header>
     <section>
       <div class="settings">
@@ -21,12 +23,30 @@
         <p class="smallText">SETTINGS:</p>
         <div class="setting">
           <p>Include uppercase</p>
+          <div class="checkboxDiv">
+            <input type="checkbox" id="toggle" />
+            <label for="toggle" class="toggleWrapper">
+              <div class="toggle"></div>
+            </label>
+          </div>
         </div>
         <div class="setting">
           <p>Include numbers</p>
+          <div class="checkboxDiv">
+            <input type="checkbox" id="toggle" />
+            <label for="toggle" class="toggleWrapper">
+              <div class="toggle"></div>
+            </label>
+          </div>
         </div>
         <div class="setting">
           <p>Include symbols</p>
+          <div class="checkboxDiv">
+            <input type="checkbox" id="toggle" />
+            <label for="toggle" class="toggleWrapper">
+              <div class="toggle"></div>
+            </label>
+          </div>
         </div>
       </div>
     </section>
@@ -55,7 +75,7 @@ main {
   flex-direction: column;
   align-items: center;
   align-self: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   background-color: gray;
   width: 25em;
   height: auto;
@@ -69,12 +89,12 @@ header {
   padding-top: 2em;
 
   h2 {
-    padding-bottom: 2em;
+    padding-bottom: 0.8em;
   }
 
   .passwordResult {
     background-color: $color_orange;
-    border-radius: 10px;
+    border-radius: 8px;
     height: auto;
     width: 90%;
     padding: 0.5em;
@@ -85,7 +105,7 @@ header {
 
 section {
   margin-top: 10%;
-  height: 60%;
+  height: 50%;
   width: 90%;
   padding-bottom: 2em;
 
@@ -104,13 +124,14 @@ section {
     }
 
     .setting {
-      height: 3em;
+      height: 3.5em;
       width: 100%;
       border-radius: 3px;
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       padding-left: 1em;
+      padding-right: 1em;
       background-color: $color_light_gray;
 
       &:not(:last-child) {
@@ -122,17 +143,17 @@ section {
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-evenly;
+      justify-content: space-between;
       background-color: transparent;
-
-      p {
-        padding-top: 0.6em;
-        font-size: 125%;
-      }
 
       .lenghtSlider {
         width: 80%;
-        margin-left: -5%;
+      }
+
+      p {
+        padding-top: 0.6em;
+        padding-right: 0.5em;
+        font-size: 125%;
       }
     }
   }
@@ -147,9 +168,129 @@ footer {
   padding-bottom: 1em;
 }
 
+// Checkbox magic
+.checkboxDiv {
+  input {
+    display: none;
+  }
+
+  .toggleWrapper {
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fe4551;
+
+    &:active {
+      width: 35px;
+      height: 35px;
+
+      .toggle {
+        height: 7px;
+        width: 7px;
+      }
+    }
+
+    .toggle {
+      transition: all 0.2s ease-in-out;
+      height: 4px;
+      width: 4px;
+      background-color: transparent;
+      border: 10px solid #fff;
+      border-radius: 50%;
+      cursor: pointer;
+
+      animation: red 0.7s linear forwards;
+    }
+  }
+
+  .background {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #fef5f4;
+  }
+
+  input:checked {
+    & ~ .background {
+      background-color: #f9faf7;
+    }
+    & + .toggleWrapper {
+      background-color: #48e98a;
+
+      .toggle {
+        width: 0;
+        background-color: #fff;
+        border-color: transparent;
+        border-radius: 30px;
+        animation: green 0.7s linear forwards !important;
+      }
+    }
+  }
+
+  @keyframes red {
+    0% {
+      height: 30px;
+      width: 0;
+      border-width: 2px;
+    }
+    55% {
+      height: 13px;
+      width: 27px;
+      border-width: 5px;
+    }
+
+    70% {
+      height: 20px;
+      width: 20px;
+      border-width: 5px;
+    }
+
+    85% {
+      height: 15px;
+      width: 25px;
+      border-width: 5px;
+    }
+
+    100% {
+      height: 20px;
+      width: 20px;
+      border-width: 5px;
+    }
+  }
+
+  @keyframes green {
+    0% {
+      height: 10px;
+      width: 10px;
+      border-width: 3px;
+    }
+    25%,
+    55%,
+    85% {
+      height: 20px;
+      width: 2px;
+      border-width: 3px;
+    }
+
+    40%,
+    70%,
+    100% {
+      height: 20px;
+      width: 0;
+      border-width: 3px;
+    }
+  }
+}
+
 // Range slider magic
-$color__default: rgba(255, 255, 255, 0.5);
-$color__hover: rgba(255, 255, 255, 0.7);
+$color__default: rgba(255, 255, 255, 0.8);
+$color__hover: rgba(255, 255, 255, 1);
 $color__active: rgba(255, 255, 255, 1);
 
 input[type="range"] {
