@@ -52,7 +52,9 @@
     </section>
     <footer>
       <div class="generateButtonDiv">
-        <button class="generateButton">Generate</button>
+        <button class="generateButton" @click="generatePassword">
+          Generate
+        </button>
       </div>
     </footer>
   </main>
@@ -64,6 +66,18 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Generator extends Vue {
   private passwordLenght: number = 25;
+  private password: string;
+
+  private generateLowerCase() {}
+
+  private shuffleCharacters() {
+    let lowercase = this.generateLowerCase();
+    console.log(lowercase);
+  }
+
+  private generatePassword() {
+    this.shuffleCharacters();
+  }
 }
 </script>
 
