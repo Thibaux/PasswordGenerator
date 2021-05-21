@@ -66,7 +66,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Generator extends Vue {
   private passwordLenght: number = 25;
-  // private password: string;
+  private password: string = "";
+  private valuetoseewhichcheckboxesareclicked: number = 0;
+  private amountOfCheckboxes: number = 3;
 
   private secureMathRandom() {
     return (
@@ -76,11 +78,11 @@ export default class Generator extends Vue {
   }
 
   private generateLowerCase() {
-    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
   }
 
   private generateUpperCase() {
-    return String.fromCharCode(Math.floor(this.secureMathRandom() * 10) + 48);
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
   }
 
   private generateSymbol() {
@@ -95,6 +97,7 @@ export default class Generator extends Vue {
   private shuffleCharacters($password: string) {
     let result: string;
     let password = $password;
+
     password.split("");
     let passwordChars = [...password];
     let n = passwordChars.length;
@@ -110,20 +113,34 @@ export default class Generator extends Vue {
   }
 
   private generatePassword() {
-    let lowercase: string = "";
-    let lower: string = "";
-    for (let index = 0; index < 10; index++) {
-      lower = this.generateLowerCase();
-      lowercase += lower;
+    let password: string = "";
+    let lenghtOfPassword: number = 0;
+    let divider: number = 0;
+    let lowerChar: string = "";
+    let upperChar: string = "";
+    let symbolChar: string = "";
+    let numberChar: string = "";
+
+    divider = this.amountOfCheckboxes;
+    lenghtOfPassword = Math.round(this.passwordLenght / divider);
+
+    // lenghtOfPassword =
+    // this.passwordLenght / this.valuetoseewhichcheckboxesareclicked;
+
+    for (let index = 0; index < lenghtOfPassword; index++) {
+      lowerChar = this.generateLowerCase();
+      upperChar = this.generateUpperCase();
+      symbolChar = this.generateLowerCase();
+      numberChar = this.generateUpperCase();
+
+      password += lowerChar += upperChar += symbolChar += numberChar;
     }
 
-    console.log(lowercase);
+    this.shuffleCharacters(password);
 
-    console.log();
-    let p: string;
-    p = this.shuffleCharacters(lowercase);
-    console.log(lowercase);
-    console.log(p);
+    console.log(password);
+    console.log(password.length);
+    this.password = password;
   }
 }
 </script>
