@@ -63,12 +63,27 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
+type complexObjectInterface = {
+  upper: boolean;
+  symbol: boolean;
+  number: boolean;
+};
+
 @Component
 export default class Generator extends Vue {
   private passwordLenght: number = 25;
   private password: string = "";
-  private valuetoseewhichcheckboxesareclicked: number = 0;
-  private amountOfCheckboxes: number = 3;
+  private settingsChecked: Array<object> = [
+    {
+      upper: true,
+      symbol: true,
+      number: true,
+    },
+  ];
+
+  private type tplotOptions = {
+    [key: string]: boolean
+}
 
   private secureMathRandom() {
     return (
@@ -115,14 +130,28 @@ export default class Generator extends Vue {
   private generatePassword() {
     let password: string = "";
     let lenghtOfPassword: number = 0;
-    let divider: number = 0;
+    let temp: number = 0;
     let lowerChar: string = "";
     let upperChar: string = "";
     let symbolChar: string = "";
     let numberChar: string = "";
+    let key: string = "";
 
-    divider = this.amountOfCheckboxes;
-    lenghtOfPassword = Math.round(this.passwordLenght / divider);
+    this.settingsChecked[0][upper];
+
+    // for (key in this.settingsChecked) {
+    //   if (this.settingsChecked.hasOwnProperty(key)) {
+    //     console.log(this.settingsChecked[]);
+    //     console.log(key);
+    //     temp++;
+    //   }
+    // }
+
+    // console.log(temp);
+
+    // lenghtOfPassword = Math.round(this.passwordLenght / divider);
+
+    // console.log(lenghtOfPassword);
 
     // lenghtOfPassword =
     // this.passwordLenght / this.valuetoseewhichcheckboxesareclicked;
@@ -136,11 +165,10 @@ export default class Generator extends Vue {
       password += lowerChar += upperChar += symbolChar += numberChar;
     }
 
-    this.shuffleCharacters(password);
+    this.password = this.shuffleCharacters(password);
 
-    console.log(password);
-    console.log(password.length);
-    this.password = password;
+    // console.log(this.password);
+    // console.log(this.password.length);
   }
 }
 </script>
