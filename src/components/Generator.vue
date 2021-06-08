@@ -2,8 +2,12 @@
   <main>
     <header>
       <h2>Generator 3000</h2>
-      <div class="passwordResult">
-        {{ password }}sldkfj;sdlkjf;slkdjf;lskdjf
+      <div
+        id="resultPassword"
+        v-bind:class="{ showResultPassword: showResult }"
+        data-clipboard-text
+      >
+        {{ password }}
       </div>
     </header>
     <section>
@@ -63,17 +67,21 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
+// new ClipboardJS(".btn");
+
 interface settingsArray {
   [key: string]: string;
 }
 
 @Component
 export default class Generator extends Vue {
+  private showResult: boolean = false;
   private passwordLenght: number = 25;
   private password: string = "";
   public settingsChecked: settingsArray = {
     upper: "generateUpperCase",
     symbol: "generateSymbol",
+    number: "generateNumber",
   };
 
   private secureMathRandom() {
@@ -160,7 +168,22 @@ export default class Generator extends Vue {
 
     password = this.shuffleCharacters(password);
     this.password = password.slice(0, -1);
-    console.log(this.password);
+
+    this.showResult = true;
+  }
+
+  private copyPasswordToClipbord() {
+    // let textToCopy: HTMLInputElement;
+
+    console.log(this.$el);
+
+    const textToCopy = document.querySelector("#resultPassword");
+
+    // textToCopy.setAttribute("type", "text");
+    // textToCopy.select();
+
+    document.execCommand("copy");
+    console.log("coppyed");
   }
 }
 </script>
@@ -190,14 +213,17 @@ header {
     padding-bottom: 0.8em;
   }
 
-  .passwordResult {
+  .showResultPassword {
     background-color: $color_orange;
     border-radius: 8px;
     height: auto;
     width: 90%;
     padding: 0.5em;
+    padding-top: 1em;
+    padding-bottom: 1em;
     margin-left: 5%;
-    display: none;
+    word-wrap: break-word;
+    cursor: pointer;
   }
 }
 
