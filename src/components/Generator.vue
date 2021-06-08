@@ -52,7 +52,7 @@
     </section>
     <footer>
       <div class="generateButtonDiv">
-        <button class="generateButton" @click="generatePassword">
+        <button class="generateButton" @click="addPasswordValues">
           Generate
         </button>
       </div>
@@ -63,27 +63,18 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-type complexObjectInterface = {
-  upper: boolean;
-  symbol: boolean;
-  number: boolean;
-};
+interface settingsArray {
+  [key: string]: string;
+}
 
 @Component
 export default class Generator extends Vue {
   private passwordLenght: number = 25;
   private password: string = "";
-  private settingsChecked: Array<object> = [
-    {
-      upper: true,
-      symbol: true,
-      number: true,
-    },
-  ];
-
-  private type tplotOptions = {
-    [key: string]: boolean
-}
+  public settingsChecked: settingsArray = {
+    upper: "generateUpperCase",
+    symbol: "generateSymbol",
+  };
 
   private secureMathRandom() {
     return (
@@ -127,48 +118,49 @@ export default class Generator extends Vue {
     return result;
   }
 
-  private generatePassword() {
+  private generatePasswordValues() {
     let password: string = "";
-    let lenghtOfPassword: number = 0;
-    let temp: number = 0;
-    let lowerChar: string = "";
-    let upperChar: string = "";
-    let symbolChar: string = "";
-    let numberChar: string = "";
-    let key: string = "";
+    let settingValue: string = "";
 
-    this.settingsChecked[0][upper];
+    Object.values(this.settingsChecked).forEach((element) => {
+      switch (element) {
+        case "generateUpperCase":
+          settingValue = this.generateUpperCase();
+          break;
+        case "generateSymbol":
+          settingValue = this.generateSymbol();
+          break;
+        case "generateNumber":
+          settingValue = this.generateNumber();
+          break;
+      }
 
-    // for (key in this.settingsChecked) {
-    //   if (this.settingsChecked.hasOwnProperty(key)) {
-    //     console.log(this.settingsChecked[]);
-    //     console.log(key);
-    //     temp++;
-    //   }
-    // }
+      password += settingValue;
+    });
 
-    // console.log(temp);
+    return password;
+  }
 
-    // lenghtOfPassword = Math.round(this.passwordLenght / divider);
+  private addPasswordValues() {
+    let times: number = 0;
+    let passwordValues: string = "";
+    let password: string = "";
 
-    // console.log(lenghtOfPassword);
+    times =
+      Math.floor(
+        this.passwordLenght / Object.values(this.settingsChecked).length
+      ) + 1;
 
-    // lenghtOfPassword =
-    // this.passwordLenght / this.valuetoseewhichcheckboxesareclicked;
+    console.log(times);
 
-    for (let index = 0; index < lenghtOfPassword; index++) {
-      lowerChar = this.generateLowerCase();
-      upperChar = this.generateUpperCase();
-      symbolChar = this.generateLowerCase();
-      numberChar = this.generateUpperCase();
-
-      password += lowerChar += upperChar += symbolChar += numberChar;
+    for (let index = 0; index < times; index++) {
+      passwordValues = this.generatePasswordValues();
+      password += passwordValues;
     }
 
-    this.password = this.shuffleCharacters(password);
-
-    // console.log(this.password);
-    // console.log(this.password.length);
+    password = this.shuffleCharacters(password);
+    this.password = password.slice(0, -1);
+    console.log(this.password);
   }
 }
 </script>
