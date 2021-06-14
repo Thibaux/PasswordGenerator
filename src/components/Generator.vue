@@ -5,14 +5,14 @@
       <div
         id="resultPassword"
         v-bind:class="{ showResultPassword: showResult }"
-        data-clipboard-text
+        v-clipboard="() => password"
       >
         {{ password }}
       </div>
     </header>
     <section>
       <div class="settings">
-        <p class="smallText">LENGHT:</p>
+        <p class="smallText">LENGHT</p>
         <div class="setting lenghtSliderDiv">
           <input
             type="range"
@@ -24,10 +24,13 @@
           />
           <p>{{ passwordLenght }}</p>
         </div>
-        <p class="smallText">SETTINGS:</p>
+        <p class="smallText">SETTINGS</p>
         <div class="setting">
           <p>Include uppercase</p>
-          <div class="checkboxDiv">
+          <div
+            class="checkboxDiv"
+            @click="addCheckedSettingToArray('generateUpperCase')"
+          >
             <input type="checkbox" id="toggle" />
             <label for="toggle" class="toggleWrapper">
               <div class="toggle"></div>
@@ -67,11 +70,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-// new ClipboardJS(".btn");
-
 interface settingsArray {
   [key: string]: string;
 }
+
+// interface settingsArray2 {
+//   []: string;
+// }
 
 @Component
 export default class Generator extends Vue {
@@ -83,6 +88,21 @@ export default class Generator extends Vue {
     symbol: "generateSymbol",
     number: "generateNumber",
   };
+  public settingsArray2: string[] = ["generateLowerCase"];
+
+  private addCheckedSettingToArray($setting: string) {
+    if (this.settingsArray2.includes($setting)) {
+      console.log("boy");
+      const index = this.settingsArray2.indexOf($setting);
+      if (index > -1) {
+        this.settingsArray2.splice(index, 1);
+      }
+    }
+
+    this.settingsArray2.push($setting);
+
+    console.log(this.settingsArray2);
+  }
 
   private secureMathRandom() {
     return (
@@ -132,6 +152,9 @@ export default class Generator extends Vue {
 
     Object.values(this.settingsChecked).forEach((element) => {
       switch (element) {
+        case "generateLowerCase":
+          settingValue = this.generateLowerCase();
+          break;
         case "generateUpperCase":
           settingValue = this.generateUpperCase();
           break;
@@ -159,8 +182,6 @@ export default class Generator extends Vue {
         this.passwordLenght / Object.values(this.settingsChecked).length
       ) + 1;
 
-    console.log(times);
-
     for (let index = 0; index < times; index++) {
       passwordValues = this.generatePasswordValues();
       password += passwordValues;
@@ -170,20 +191,6 @@ export default class Generator extends Vue {
     this.password = password.slice(0, -1);
 
     this.showResult = true;
-  }
-
-  private copyPasswordToClipbord() {
-    // let textToCopy: HTMLInputElement;
-
-    console.log(this.$el);
-
-    const textToCopy = document.querySelector("#resultPassword");
-
-    // textToCopy.setAttribute("type", "text");
-    // textToCopy.select();
-
-    document.execCommand("copy");
-    console.log("coppyed");
   }
 }
 </script>
@@ -245,6 +252,7 @@ section {
       margin-left: 1em;
       display: flex;
       justify-content: flex-start;
+      color: white;
     }
 
     .setting {
@@ -308,7 +316,8 @@ footer {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #fe4551;
+
+    background-color: #48e98a;
 
     &:active {
       width: 35px;
@@ -319,41 +328,18 @@ footer {
         width: 7px;
       }
     }
-
-    .toggle {
-      transition: all 0.2s ease-in-out;
-      height: 4px;
-      width: 4px;
-      background-color: transparent;
-      border: 10px solid #fff;
-      border-radius: 50%;
-      cursor: pointer;
-
-      animation: red 0.7s linear forwards;
-    }
   }
 
   .background {
     position: absolute;
     height: 100vh;
     width: 100vw;
-    background-color: #fef5f4;
+    background-color: #f9faf7;
   }
 
   input:checked {
-    & ~ .background {
-      background-color: #f9faf7;
-    }
     & + .toggleWrapper {
-      background-color: #48e98a;
-
-      .toggle {
-        width: 0;
-        background-color: #fff;
-        border-color: transparent;
-        border-radius: 30px;
-        animation: green 0.7s linear forwards !important;
-      }
+      background-color: #fe4551;
     }
   }
 
