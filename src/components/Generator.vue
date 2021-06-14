@@ -27,21 +27,28 @@
         <p class="smallText">SETTINGS</p>
         <div class="setting">
           <p>Include uppercase</p>
-          <div
-            class="checkboxDiv"
-            @click="addCheckedSettingToArray('generateUpperCase')"
-          >
+          <div class="tgl-flat">
             <input type="checkbox" id="toggle" />
-            <label for="toggle" class="toggleWrapper">
+            <label
+              class=".tgl-btn"
+              data-tg-off="OFF"
+              data-tg-on="ON"
+              for="cb3"
+              @click="addCheckedSettingToArray('generateUpperCase')"
+            >
               <div class="toggle"></div>
             </label>
           </div>
         </div>
         <div class="setting">
           <p>Include numbers</p>
-          <div class="checkboxDiv">
+          <div class="checkboxDiv2">
             <input type="checkbox" id="toggle" />
-            <label for="toggle" class="toggleWrapper">
+            <label
+              for="toggle"
+              class="toggleWrapper2"
+              @click="addCheckedSettingToArray('generateNumber')"
+            >
               <div class="toggle"></div>
             </label>
           </div>
@@ -50,7 +57,11 @@
           <p>Include symbols</p>
           <div class="checkboxDiv">
             <input type="checkbox" id="toggle" />
-            <label for="toggle" class="toggleWrapper">
+            <label
+              for="toggle"
+              class="toggleWrapper"
+              @click="addCheckedSettingToArray('generateSymbol')"
+            >
               <div class="toggle"></div>
             </label>
           </div>
@@ -70,38 +81,30 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-interface settingsArray {
-  [key: string]: string;
-}
-
-// interface settingsArray2 {
-//   []: string;
-// }
-
 @Component
 export default class Generator extends Vue {
   private showResult: boolean = false;
   private passwordLenght: number = 25;
   private password: string = "";
-  public settingsChecked: settingsArray = {
-    upper: "generateUpperCase",
-    symbol: "generateSymbol",
-    number: "generateNumber",
-  };
-  public settingsArray2: string[] = ["generateLowerCase"];
+  public settingsChecked: string[] = [
+    "generateLowerCase",
+    "generateUpperCase",
+    "generateSymbol",
+    "generateNumber",
+  ];
 
   private addCheckedSettingToArray($setting: string) {
-    if (this.settingsArray2.includes($setting)) {
-      console.log("boy");
-      const index = this.settingsArray2.indexOf($setting);
+    if (!this.settingsChecked.includes($setting)) {
+      this.settingsChecked.push($setting);
+    } else if (this.settingsChecked.includes($setting)) {
+      const index = this.settingsChecked.indexOf($setting);
+
       if (index > -1) {
-        this.settingsArray2.splice(index, 1);
+        this.settingsChecked.splice(index, 1);
       }
     }
 
-    this.settingsArray2.push($setting);
-
-    console.log(this.settingsArray2);
+    console.log(this.settingsChecked);
   }
 
   private secureMathRandom() {
@@ -173,6 +176,7 @@ export default class Generator extends Vue {
   }
 
   private addPasswordValues() {
+    console.log(this.settingsChecked);
     let times: number = 0;
     let passwordValues: string = "";
     let password: string = "";
@@ -301,12 +305,37 @@ footer {
 }
 
 // Checkbox magic
-.checkboxDiv {
+
+.tgl-flat {
+  + .tgl-btn {
+    padding: 2px;
+    transition: all 0.2s ease;
+    background: #fff;
+    border: 4px solid #f2f2f2;
+    border-radius: 2em;
+    &:after {
+      transition: all 0.2s ease;
+      background: #f2f2f2;
+      content: "";
+      border-radius: 1em;
+    }
+  }
+
+  &:checked + .tgl-btn {
+    border: 4px solid #7fc6a6;
+    &:after {
+      left: 50%;
+      background: #7fc6a6;
+    }
+  }
+}
+
+.checkboxDiv1 {
   input {
     display: none;
   }
 
-  .toggleWrapper {
+  .toggleWrapper1 {
     z-index: 3;
     display: flex;
     align-items: center;
@@ -338,62 +367,51 @@ footer {
   }
 
   input:checked {
-    & + .toggleWrapper {
+    & + .toggleWrapper1 {
       background-color: #fe4551;
     }
   }
+}
 
-  @keyframes red {
-    0% {
-      height: 30px;
-      width: 0;
-      border-width: 2px;
-    }
-    55% {
-      height: 13px;
-      width: 27px;
-      border-width: 5px;
-    }
+.checkboxDiv2 {
+  input {
+    display: none;
+  }
 
-    70% {
-      height: 20px;
-      width: 20px;
-      border-width: 5px;
-    }
+  .toggleWrapper2 {
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 
-    85% {
-      height: 15px;
-      width: 25px;
-      border-width: 5px;
-    }
+    background-color: #48e98a;
 
-    100% {
-      height: 20px;
-      width: 20px;
-      border-width: 5px;
+    &:active {
+      width: 35px;
+      height: 35px;
+
+      .toggle {
+        height: 7px;
+        width: 7px;
+      }
     }
   }
 
-  @keyframes green {
-    0% {
-      height: 10px;
-      width: 10px;
-      border-width: 3px;
-    }
-    25%,
-    55%,
-    85% {
-      height: 20px;
-      width: 2px;
-      border-width: 3px;
-    }
+  .background {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f9faf7;
+  }
 
-    40%,
-    70%,
-    100% {
-      height: 20px;
-      width: 0;
-      border-width: 3px;
+  input:checked {
+    & + .toggleWrapper2 {
+      background-color: #fe4551;
     }
   }
 }
