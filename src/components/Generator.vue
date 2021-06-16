@@ -2,13 +2,17 @@
   <main>
     <header>
       <h2>Generator 3000</h2>
-      <div class="passwordResult">
-        {{ password }}sldkfj;sdlkjf;slkdjf;lskdjf
+      <div
+        id="resultPassword"
+        v-bind:class="{ showResultPassword: showResult }"
+        v-clipboard="() => password"
+      >
+        {{ password }}
       </div>
     </header>
     <section>
       <div class="settings">
-        <p class="smallText">LENGHT:</p>
+        <p class="smallText">LENGHT</p>
         <div class="setting lenghtSliderDiv">
           <input
             type="range"
@@ -20,21 +24,31 @@
           />
           <p>{{ passwordLenght }}</p>
         </div>
-        <p class="smallText">SETTINGS:</p>
+        <p class="smallText">SETTINGS</p>
         <div class="setting">
           <p>Include uppercase</p>
-          <div class="checkboxDiv">
+          <div class="tgl-flat">
             <input type="checkbox" id="toggle" />
-            <label for="toggle" class="toggleWrapper">
+            <label
+              class=".tgl-btn"
+              data-tg-off="OFF"
+              data-tg-on="ON"
+              for="cb3"
+              @click="addCheckedSettingToArray('generateUpperCase')"
+            >
               <div class="toggle"></div>
             </label>
           </div>
         </div>
         <div class="setting">
           <p>Include numbers</p>
-          <div class="checkboxDiv">
+          <div class="checkboxDiv2">
             <input type="checkbox" id="toggle" />
-            <label for="toggle" class="toggleWrapper">
+            <label
+              for="toggle"
+              class="toggleWrapper2"
+              @click="addCheckedSettingToArray('generateNumber')"
+            >
               <div class="toggle"></div>
             </label>
           </div>
@@ -43,7 +57,11 @@
           <p>Include symbols</p>
           <div class="checkboxDiv">
             <input type="checkbox" id="toggle" />
-            <label for="toggle" class="toggleWrapper">
+            <label
+              for="toggle"
+              class="toggleWrapper"
+              @click="addCheckedSettingToArray('generateSymbol')"
+            >
               <div class="toggle"></div>
             </label>
           </div>
@@ -52,7 +70,7 @@
     </section>
     <footer>
       <div class="generateButtonDiv">
-        <button class="generateButton" @click="generatePassword">
+        <button class="generateButton" @click="addPasswordValues">
           Generate
         </button>
       </div>
@@ -65,18 +83,118 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Generator extends Vue {
+  private showResult: boolean = false;
   private passwordLenght: number = 25;
-  private password: string;
+  private password: string = "";
+  public settingsChecked: string[] = [
+    "generateLowerCase",
+    "generateUpperCase",
+    "generateSymbol",
+    "generateNumber",
+  ];
 
-  private generateLowerCase() {}
+  private addCheckedSettingToArray($setting: string) {
+    if (!this.settingsChecked.includes($setting)) {
+      this.settingsChecked.push($setting);
+    } else if (this.settingsChecked.includes($setting)) {
+      const index = this.settingsChecked.indexOf($setting);
 
-  private shuffleCharacters() {
-    let lowercase = this.generateLowerCase();
-    console.log(lowercase);
+      if (index > -1) {
+        this.settingsChecked.splice(index, 1);
+      }
+    }
+
+    console.log(this.settingsChecked);
   }
 
-  private generatePassword() {
-    this.shuffleCharacters();
+  private secureMathRandom() {
+    return (
+      window.crypto.getRandomValues(new Uint32Array(1))[0] /
+      (Math.pow(2, 32) - 1)
+    );
+  }
+
+  private generateLowerCase() {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+  }
+
+  private generateUpperCase() {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+  }
+
+  private generateSymbol() {
+    const symbols = '~!@#$%^&*()_+{}":?><;.,';
+    return symbols[Math.floor(Math.random() * symbols.length)];
+  }
+
+  private generateNumber() {
+    return String.fromCharCode(Math.floor(this.secureMathRandom() * 10) + 48);
+  }
+
+  private shuffleCharacters($password: string) {
+    let result: string;
+    let password = $password;
+
+    password.split("");
+    let passwordChars = [...password];
+    let n = passwordChars.length;
+
+    for (var i = n - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = passwordChars[i];
+      passwordChars[i] = passwordChars[j];
+      passwordChars[j] = tmp;
+    }
+    result = passwordChars.join("");
+    return result;
+  }
+
+  private generatePasswordValues() {
+    let password: string = "";
+    let settingValue: string = "";
+
+    Object.values(this.settingsChecked).forEach((element) => {
+      switch (element) {
+        case "generateLowerCase":
+          settingValue = this.generateLowerCase();
+          break;
+        case "generateUpperCase":
+          settingValue = this.generateUpperCase();
+          break;
+        case "generateSymbol":
+          settingValue = this.generateSymbol();
+          break;
+        case "generateNumber":
+          settingValue = this.generateNumber();
+          break;
+      }
+
+      password += settingValue;
+    });
+
+    return password;
+  }
+
+  private addPasswordValues() {
+    console.log(this.settingsChecked);
+    let times: number = 0;
+    let passwordValues: string = "";
+    let password: string = "";
+
+    times =
+      Math.floor(
+        this.passwordLenght / Object.values(this.settingsChecked).length
+      ) + 1;
+
+    for (let index = 0; index < times; index++) {
+      passwordValues = this.generatePasswordValues();
+      password += passwordValues;
+    }
+
+    password = this.shuffleCharacters(password);
+    this.password = password.slice(0, -1);
+
+    this.showResult = true;
   }
 }
 </script>
@@ -106,14 +224,17 @@ header {
     padding-bottom: 0.8em;
   }
 
-  .passwordResult {
+  .showResultPassword {
     background-color: $color_orange;
     border-radius: 8px;
     height: auto;
     width: 90%;
     padding: 0.5em;
+    padding-top: 1em;
+    padding-bottom: 1em;
     margin-left: 5%;
-    display: none;
+    word-wrap: break-word;
+    cursor: pointer;
   }
 }
 
@@ -135,6 +256,7 @@ section {
       margin-left: 1em;
       display: flex;
       justify-content: flex-start;
+      color: white;
     }
 
     .setting {
@@ -183,12 +305,37 @@ footer {
 }
 
 // Checkbox magic
-.checkboxDiv {
+
+.tgl-flat {
+  + .tgl-btn {
+    padding: 2px;
+    transition: all 0.2s ease;
+    background: #fff;
+    border: 4px solid #f2f2f2;
+    border-radius: 2em;
+    &:after {
+      transition: all 0.2s ease;
+      background: #f2f2f2;
+      content: "";
+      border-radius: 1em;
+    }
+  }
+
+  &:checked + .tgl-btn {
+    border: 4px solid #7fc6a6;
+    &:after {
+      left: 50%;
+      background: #7fc6a6;
+    }
+  }
+}
+
+.checkboxDiv1 {
   input {
     display: none;
   }
 
-  .toggleWrapper {
+  .toggleWrapper1 {
     z-index: 3;
     display: flex;
     align-items: center;
@@ -198,7 +345,8 @@ footer {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #fe4551;
+
+    background-color: #48e98a;
 
     &:active {
       width: 35px;
@@ -209,17 +357,48 @@ footer {
         width: 7px;
       }
     }
+  }
 
-    .toggle {
-      transition: all 0.2s ease-in-out;
-      height: 4px;
-      width: 4px;
-      background-color: transparent;
-      border: 10px solid #fff;
-      border-radius: 50%;
-      cursor: pointer;
+  .background {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f9faf7;
+  }
 
-      animation: red 0.7s linear forwards;
+  input:checked {
+    & + .toggleWrapper1 {
+      background-color: #fe4551;
+    }
+  }
+}
+
+.checkboxDiv2 {
+  input {
+    display: none;
+  }
+
+  .toggleWrapper2 {
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+
+    background-color: #48e98a;
+
+    &:active {
+      width: 35px;
+      height: 35px;
+
+      .toggle {
+        height: 7px;
+        width: 7px;
+      }
     }
   }
 
@@ -227,77 +406,12 @@ footer {
     position: absolute;
     height: 100vh;
     width: 100vw;
-    background-color: #fef5f4;
+    background-color: #f9faf7;
   }
 
   input:checked {
-    & ~ .background {
-      background-color: #f9faf7;
-    }
-    & + .toggleWrapper {
-      background-color: #48e98a;
-
-      .toggle {
-        width: 0;
-        background-color: #fff;
-        border-color: transparent;
-        border-radius: 30px;
-        animation: green 0.7s linear forwards !important;
-      }
-    }
-  }
-
-  @keyframes red {
-    0% {
-      height: 30px;
-      width: 0;
-      border-width: 2px;
-    }
-    55% {
-      height: 13px;
-      width: 27px;
-      border-width: 5px;
-    }
-
-    70% {
-      height: 20px;
-      width: 20px;
-      border-width: 5px;
-    }
-
-    85% {
-      height: 15px;
-      width: 25px;
-      border-width: 5px;
-    }
-
-    100% {
-      height: 20px;
-      width: 20px;
-      border-width: 5px;
-    }
-  }
-
-  @keyframes green {
-    0% {
-      height: 10px;
-      width: 10px;
-      border-width: 3px;
-    }
-    25%,
-    55%,
-    85% {
-      height: 20px;
-      width: 2px;
-      border-width: 3px;
-    }
-
-    40%,
-    70%,
-    100% {
-      height: 20px;
-      width: 0;
-      border-width: 3px;
+    & + .toggleWrapper2 {
+      background-color: #fe4551;
     }
   }
 }
