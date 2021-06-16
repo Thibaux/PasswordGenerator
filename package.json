@@ -11,7 +11,6 @@
     "v-clipboard": "^2.2.3",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
-    "vue-copy-to-clipboard": "^1.0.3",
     "vue-property-decorator": "^9.1.2"
   },
   "devDependencies": {
