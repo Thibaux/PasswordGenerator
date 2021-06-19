@@ -4,9 +4,19 @@
       <h2>Generator 3000</h2>
       <div
         id="resultPassword"
-        v-bind:class="{ showResultPassword: showResult }"
+        v-bind:class="{
+          showResultPassword: showResult,
+        }"
         v-clipboard="() => password"
+        @click="copiedPopup()"
       >
+        <span
+          class="copiedPopup"
+          v-bind:class="{
+            showCopiedPopup: showCopiedPopup,
+          }"
+          >Password copied!</span
+        >
         {{ password }}
       </div>
     </header>
@@ -27,43 +37,32 @@
         <p class="smallText">SETTINGS</p>
         <div class="setting">
           <p>Include uppercase</p>
-          <div class="tgl-flat">
-            <input type="checkbox" id="toggle" />
-            <label
-              class=".tgl-btn"
-              data-tg-off="OFF"
-              data-tg-on="ON"
-              for="cb3"
+          <div class="settingCheckbox">
+            <input
               @click="addCheckedSettingToArray('generateUpperCase')"
-            >
-              <div class="toggle"></div>
-            </label>
+              type="checkbox"
+              id="toggle"
+            />
           </div>
         </div>
         <div class="setting">
           <p>Include numbers</p>
-          <div class="checkboxDiv2">
-            <input type="checkbox" id="toggle" />
-            <label
-              for="toggle"
-              class="toggleWrapper2"
+          <div class="settingCheckbox">
+            <input
+              type="checkbox"
+              id="toggle"
               @click="addCheckedSettingToArray('generateNumber')"
-            >
-              <div class="toggle"></div>
-            </label>
+            />
           </div>
         </div>
         <div class="setting">
           <p>Include symbols</p>
-          <div class="checkboxDiv">
-            <input type="checkbox" id="toggle" />
-            <label
-              for="toggle"
-              class="toggleWrapper"
+          <div class="settingCheckbox">
+            <input
               @click="addCheckedSettingToArray('generateSymbol')"
-            >
-              <div class="toggle"></div>
-            </label>
+              type="checkbox"
+              id="toggle"
+            />
           </div>
         </div>
       </div>
@@ -84,6 +83,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Generator extends Vue {
   private showResult: boolean = false;
+  private showCopiedPopup: boolean = false;
   private passwordLenght: number = 25;
   private password: string = "";
   public settingsChecked: string[] = [
@@ -103,8 +103,6 @@ export default class Generator extends Vue {
         this.settingsChecked.splice(index, 1);
       }
     }
-
-    console.log(this.settingsChecked);
   }
 
   private secureMathRandom() {
@@ -176,7 +174,6 @@ export default class Generator extends Vue {
   }
 
   private addPasswordValues() {
-    console.log(this.settingsChecked);
     let times: number = 0;
     let passwordValues: string = "";
     let password: string = "";
@@ -195,6 +192,11 @@ export default class Generator extends Vue {
     this.password = password.slice(0, -1);
 
     this.showResult = true;
+  }
+
+  private copiedPopup() {
+    this.showCopiedPopup = true;
+    console.log(" jsdfy");
   }
 }
 </script>
@@ -235,6 +237,24 @@ header {
     margin-left: 5%;
     word-wrap: break-word;
     cursor: pointer;
+  }
+
+  .copiedPopup {
+    visibility: hidden;
+    width: 9em;
+    background-color: gray;
+    color: $color_light_gray;
+    text-align: center;
+    border-radius: 3px;
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+    margin-top: 3em;
+    margin-left: 8em;
+  }
+
+  .showCopiedPopup {
+    visibility: visible;
   }
 }
 
@@ -302,116 +322,29 @@ footer {
   height: 4em;
   width: 100%;
   padding-bottom: 1em;
-}
 
-// Checkbox magic
-
-.tgl-flat {
-  + .tgl-btn {
-    padding: 2px;
-    transition: all 0.2s ease;
-    background: #fff;
-    border: 4px solid #f2f2f2;
-    border-radius: 2em;
-    &:after {
-      transition: all 0.2s ease;
-      background: #f2f2f2;
-      content: "";
-      border-radius: 1em;
-    }
-  }
-
-  &:checked + .tgl-btn {
-    border: 4px solid #7fc6a6;
-    &:after {
-      left: 50%;
-      background: #7fc6a6;
-    }
-  }
-}
-
-.checkboxDiv1 {
-  input {
-    display: none;
-  }
-
-  .toggleWrapper1 {
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  .generateButtonDiv button {
+    display: inline-block;
+    padding: 0.35em 1.2em;
+    border: 0.1em solid #ffffff;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 0.12em;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-weight: 500;
+    font-size: 1.2em;
+    text-align: center;
     transition: all 0.2s;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-
-    background-color: #48e98a;
-
-    &:active {
-      width: 35px;
-      height: 35px;
-
-      .toggle {
-        height: 7px;
-        width: 7px;
-      }
-    }
   }
-
-  .background {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    background-color: #f9faf7;
-  }
-
-  input:checked {
-    & + .toggleWrapper1 {
-      background-color: #fe4551;
-    }
-  }
-}
-
-.checkboxDiv2 {
-  input {
-    display: none;
-  }
-
-  .toggleWrapper2 {
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .generateButtonDiv button:hover {
+    color: whitesmoke;
+    background-color: $color_dark_gray;
     cursor: pointer;
-    transition: all 0.2s;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-
-    background-color: #48e98a;
-
-    &:active {
-      width: 35px;
-      height: 35px;
-
-      .toggle {
-        height: 7px;
-        width: 7px;
-      }
-    }
   }
-
-  .background {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    background-color: #f9faf7;
-  }
-
-  input:checked {
-    & + .toggleWrapper2 {
-      background-color: #fe4551;
+  @media all and (max-width: 30em) {
+    .generateButtonDiv button {
+      display: block;
+      margin: 0.4em auto;
     }
   }
 }
