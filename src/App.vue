@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Generator from './components/Generator.vue';
+import { Component, Vue } from "vue-property-decorator";
+import Generator from "./components/Generator.vue";
 
 @Component({
   components: {
@@ -17,7 +17,7 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-@import 'assets/styles/main.scss';
+@import "assets/styles/main.scss";
 
 * {
   margin: 0;
@@ -33,5 +33,8 @@ export default class App extends Vue {}
   justify-content: center;
   width: 100vw;
   height: 100vh;
+  background: url("./assets/img/background/cool-background.png") no-repeat
+    center fixed;
+  background-size: cover;
 }
 </style>

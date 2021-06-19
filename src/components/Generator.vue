@@ -39,6 +39,7 @@
           <p>Include uppercase</p>
           <div class="settingCheckbox">
             <input
+              checked
               @click="addCheckedSettingToArray('generateUpperCase')"
               type="checkbox"
               id="toggle"
@@ -49,6 +50,7 @@
           <p>Include numbers</p>
           <div class="settingCheckbox">
             <input
+              checked
               type="checkbox"
               id="toggle"
               @click="addCheckedSettingToArray('generateNumber')"
@@ -59,6 +61,7 @@
           <p>Include symbols</p>
           <div class="settingCheckbox">
             <input
+              checked
               @click="addCheckedSettingToArray('generateSymbol')"
               type="checkbox"
               id="toggle"
@@ -242,14 +245,13 @@ header {
   .copiedPopup {
     visibility: hidden;
     width: 9em;
-    background-color: gray;
-    color: $color_light_gray;
+    color: whitesmoke;
     text-align: center;
     border-radius: 3px;
     padding: 0.5rem;
     position: absolute;
     z-index: 1;
-    margin-top: 3em;
+    margin-top: 2em;
     margin-left: 8em;
   }
 
@@ -288,7 +290,9 @@ section {
       justify-content: space-between;
       padding-left: 1em;
       padding-right: 1em;
-      background-color: $color_light_gray;
+      background: url("./../assets/img/cool-background-setting-div.png")
+        no-repeat center fixed;
+      background-size: cover;
 
       &:not(:last-child) {
         margin-bottom: 2em;
@@ -335,12 +339,16 @@ footer {
     font-size: 1.2em;
     text-align: center;
     transition: all 0.2s;
-  }
-  .generateButtonDiv button:hover {
     color: whitesmoke;
-    background-color: $color_dark_gray;
-    cursor: pointer;
+    background-image: url("./../assets/img/cool-background-button-div.png");
+    background-size: cover;
   }
+
+  .generateButtonDiv button:hover {
+    cursor: pointer;
+    opacity: 0.5;
+  }
+
   @media all and (max-width: 30em) {
     .generateButtonDiv button {
       display: block;
@@ -350,9 +358,9 @@ footer {
 }
 
 // Range slider magic
-$color__default: rgba(255, 255, 255, 0.8);
-$color__hover: rgba(255, 255, 255, 1);
-$color__active: rgba(255, 255, 255, 1);
+$color__default: rgba(0, 0, 0, 0.8);
+$color__hover: rgba(0, 0, 0, 1);
+$color__active: rgba(0, 0, 0, 1);
 
 input[type="range"] {
   box-sizing: border-box;
