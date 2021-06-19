@@ -199,7 +199,6 @@ export default class Generator extends Vue {
 
   private copiedPopup() {
     this.showCopiedPopup = true;
-    console.log(" jsdfy");
   }
 }
 </script>
