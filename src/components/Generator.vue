@@ -22,17 +22,17 @@
     </header>
     <section>
       <div class="settings">
-        <p class="smallText">LENGHT</p>
-        <div class="setting lenghtSliderDiv">
+        <p class="smallText">LENGTH</p>
+        <div class="setting lengthSliderDiv">
           <input
             type="range"
             min="5"
             max="45"
             value="25"
-            class="lenghtSlider"
-            v-model="passwordLenght"
+            class="lengthSlider"
+            v-model="passwordLength"
           />
-          <p>{{ passwordLenght }}</p>
+          <p>{{ passwordLength }}</p>
         </div>
         <p class="smallText">SETTINGS</p>
         <div class="setting">
@@ -81,13 +81,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component,  Vue } from "vue-property-decorator";
 
 @Component
 export default class Generator extends Vue {
   private showResult: boolean = false;
   private showCopiedPopup: boolean = false;
-  private passwordLenght: number = 25;
+  private passwordLength: number = 25;
   private password: string = "";
   public settingsChecked: string[] = [
     "generateLowerCase",
@@ -140,9 +140,9 @@ export default class Generator extends Vue {
     let passwordChars = [...password];
     let n = passwordChars.length;
 
-    for (var i = n - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = passwordChars[i];
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = passwordChars[i];
       passwordChars[i] = passwordChars[j];
       passwordChars[j] = tmp;
     }
@@ -177,13 +177,13 @@ export default class Generator extends Vue {
   }
 
   private addPasswordValues() {
-    let times: number = 0;
+    let times: number;
     let passwordValues: string = "";
     let password: string = "";
 
     times =
       Math.floor(
-        this.passwordLenght / Object.values(this.settingsChecked).length
+        this.passwordLength / Object.values(this.settingsChecked).length
       ) + 1;
 
     for (let index = 0; index < times; index++) {
@@ -233,9 +233,7 @@ header {
     border-radius: 8px;
     height: auto;
     width: 90%;
-    padding: 0.5em;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding: 1em 0.5em;
     margin-left: 5%;
     word-wrap: break-word;
     cursor: pointer;
@@ -298,14 +296,14 @@ section {
       }
     }
 
-    .lenghtSliderDiv {
+    .lengthSliderDiv {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       background-color: transparent;
 
-      .lenghtSlider {
+      .lengthSlider {
         width: 80%;
       }
 
