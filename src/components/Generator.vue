@@ -1,25 +1,9 @@
 <template>
   <main>
-    <header>
-      <h2>Generator 3000</h2>
-      <div
-        id="resultPassword"
-        v-bind:class="{
-          showResultPassword: showResult,
-        }"
-        v-clipboard="() => password"
-        @click="copiedPopup()"
-      >
-        <span
-          class="copiedPopup"
-          v-bind:class="{
-            showCopiedPopup: showCopiedPopup,
-          }"
-          >Password copied!</span
-        >
-        {{ password }}
-      </div>
-    </header>
+    <GeneratorHeader
+      :showResult="showResult"
+      :password="password"
+    ></GeneratorHeader>
     <section>
       <div class="settings">
         <p class="smallText">LENGTH</p>
@@ -70,30 +54,30 @@
         </div>
       </div>
     </section>
-    <footer>
-      <div class="generateButtonDiv">
-        <button class="generateButton" @click="addPasswordValues">
-          Generate
-        </button>
-      </div>
-    </footer>
   </main>
+  <GeneratorFooter :passwordLength="passwordLength"></GeneratorFooter>
 </template>
 
 <script lang="ts">
-import { Component,  Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
+import { GeneratorHeader } from '@/components/subComponents';
+import GeneratorFooter from '@/components/subComponents/GeneratorFooter.vue';
 
-@Component
+@Component({
+  components: {
+    GeneratorFooter,
+    GeneratorHeader,
+  },
+})
 export default class Generator extends Vue {
   private showResult: boolean = false;
-  private showCopiedPopup: boolean = false;
   private passwordLength: number = 25;
-  private password: string = "";
+  private password: string = '';
   public settingsChecked: string[] = [
-    "generateLowerCase",
-    "generateUpperCase",
-    "generateSymbol",
-    "generateNumber",
+    'generateLowerCase',
+    'generateUpperCase',
+    'generateSymbol',
+    'generateNumber',
   ];
 
   private addCheckedSettingToArray($setting: string) {
@@ -136,7 +120,7 @@ export default class Generator extends Vue {
     let result: string;
     let password = $password;
 
-    password.split("");
+    password.split('');
     let passwordChars = [...password];
     let n = passwordChars.length;
 
@@ -146,26 +130,26 @@ export default class Generator extends Vue {
       passwordChars[i] = passwordChars[j];
       passwordChars[j] = tmp;
     }
-    result = passwordChars.join("");
+    result = passwordChars.join('');
     return result;
   }
 
   private generatePasswordValues() {
-    let password: string = "";
-    let settingValue: string = "";
+    let password: string = '';
+    let settingValue: string = '';
 
     Object.values(this.settingsChecked).forEach((element) => {
       switch (element) {
-        case "generateLowerCase":
+        case 'generateLowerCase':
           settingValue = this.generateLowerCase();
           break;
-        case "generateUpperCase":
+        case 'generateUpperCase':
           settingValue = this.generateUpperCase();
           break;
-        case "generateSymbol":
+        case 'generateSymbol':
           settingValue = this.generateSymbol();
           break;
-        case "generateNumber":
+        case 'generateNumber':
           settingValue = this.generateNumber();
           break;
       }
@@ -175,36 +159,11 @@ export default class Generator extends Vue {
 
     return password;
   }
-
-  private addPasswordValues() {
-    let times: number;
-    let passwordValues: string = "";
-    let password: string = "";
-
-    times =
-      Math.floor(
-        this.passwordLength / Object.values(this.settingsChecked).length
-      ) + 1;
-
-    for (let index = 0; index < times; index++) {
-      passwordValues = this.generatePasswordValues();
-      password += passwordValues;
-    }
-
-    password = this.shuffleCharacters(password);
-    this.password = password.slice(0, -1);
-
-    this.showResult = true;
-  }
-
-  private copiedPopup() {
-    this.showCopiedPopup = true;
-  }
 }
 </script>
 
 <style scoped lang="scss">
-@import "./../assets/styles/main.scss";
+@import './../assets/styles/main.scss';
 
 main {
   display: flex;
@@ -216,45 +175,6 @@ main {
   width: 25em;
   height: auto;
   border-radius: 5px;
-}
-
-header {
-  font-size: 100%;
-  height: auto;
-  width: 100%;
-  padding-top: 2em;
-
-  h2 {
-    padding-bottom: 0.8em;
-  }
-
-  .showResultPassword {
-    background-color: $color_orange;
-    border-radius: 8px;
-    height: auto;
-    width: 90%;
-    padding: 1em 0.5em;
-    margin-left: 5%;
-    word-wrap: break-word;
-    cursor: pointer;
-  }
-
-  .copiedPopup {
-    visibility: hidden;
-    width: 9em;
-    color: whitesmoke;
-    text-align: center;
-    border-radius: 3px;
-    padding: 0.5rem;
-    position: absolute;
-    z-index: 1;
-    margin-top: 2em;
-    margin-left: 8em;
-  }
-
-  .showCopiedPopup {
-    visibility: visible;
-  }
 }
 
 section {
@@ -287,7 +207,7 @@ section {
       justify-content: space-between;
       padding-left: 1em;
       padding-right: 1em;
-      background: url("./../assets/img/cool-background-setting-div.png")
+      background: url('./../assets/img/cool-background-setting-div.png')
         no-repeat center fixed;
       background-size: cover;
 
@@ -337,7 +257,7 @@ footer {
     text-align: center;
     transition: all 0.2s;
     color: whitesmoke;
-    background-image: url("./../assets/img/cool-background-button-div.png");
+    background-image: url('./../assets/img/cool-background-button-div.png');
     background-size: cover;
   }
 
@@ -359,7 +279,7 @@ $color__default: rgba(0, 0, 0, 0.8);
 $color__hover: rgba(0, 0, 0, 1);
 $color__active: rgba(0, 0, 0, 1);
 
-input[type="range"] {
+input[type='range'] {
   box-sizing: border-box;
   font-size: 12px;
   line-height: 1;

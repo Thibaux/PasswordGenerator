@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "eslint": "^8.24.0",
+    "prettier": "^2.7.1",
     "v-clipboard": "^2.2.3",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
